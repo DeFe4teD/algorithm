@@ -23,7 +23,8 @@ using namespace std;
 // Union-Find
 struct UnionFind {
     // core member
-    vector<int> par, rank;
+    vector<int> par; // par[root] にサイズを保存してない。
+    vector<int> rank; // rank[i]=iを根とする木の高さの目安. 経路圧縮後の正確な高さではない.
 
     // constructor
     UnionFind() { }
