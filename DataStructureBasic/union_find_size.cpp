@@ -25,28 +25,28 @@ using namespace std;
 // Union-Find
 struct UnionFind {
     // core member
-    vector<int> par;
+    vector<int> par; // par[i]>= 0ならiの親. par[i]<0ならi 根で,-par[i] がグループサイズ.
 
     // constructor
     UnionFind() { }
-    UnionFind(int n) : par(n, -1) { }
+    UnionFind(int n) : par(n, -1) { } 
     void init(int n) { par.assign(n, -1); }
     
     // core methods
-    int root(int x) {
+    int root(int x) { // xが所属するグループの根を求める. 
         if (par[x] < 0) return x;
-        else return par[x] = root(par[x]);
+        else return par[x] = root(par[x]); // 経路圧縮. parを書き換える. 
     }
     
     bool same(int x, int y) {
         return root(x) == root(y);
     }
     
-    bool merge(int x, int y) {
+    bool merge(int x, int y) { 
         x = root(x), y = root(y);
         if (x == y) return false;
-        if (par[x] > par[y]) swap(x, y); // merge technique
-        par[x] += par[y];
+        if (par[x] > par[y]) swap(x, y); //-par[x],-par[y]がそれぞれのグループサイズ.サイズが小さい木をサイズが大きい木につなげる.
+        par[x] += par[y]; 
         par[y] = x;
         return true;
     }
@@ -57,7 +57,7 @@ struct UnionFind {
     
     // get groups
     vector<vector<int>> groups() {
-        vector<vector<int>> member(par.size());
+        vector<vector<int>> member(par.size()); // member[i]. iが根であるグループのメンバーリスト. 
         for (int v = 0; v < (int)par.size(); ++v) {
             member[root(v)].push_back(v);
         }
@@ -69,7 +69,7 @@ struct UnionFind {
     }
     
     // debug
-    friend ostream& operator << (ostream &s, UnionFind uf) {
+    friend ostream& operator << (ostream &s, UnionFind uf) { // friend を付けると「メンバ関数になる」のではなく、非メンバ関数のまま特別に内部アクセスを許可される
         const vector<vector<int>> &gs = uf.groups();
         for (const vector<int> &g : gs) {
             s << "group: ";
